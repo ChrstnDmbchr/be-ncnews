@@ -7,6 +7,7 @@ const topicsRoutes = require('./topicsRoutes');
 const usersRoutes = require('./usersRoutes');
 
 router.get('/', (req, res, next) => {
+  // serve html page with route info
   res.status(200).send({
     message: "GET /api working"
   });
