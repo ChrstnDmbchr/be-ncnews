@@ -1,9 +1,8 @@
 if (process.env.NODE_ENV !== 'test') process.env.NODE_ENV = 'dev';
 
 const mongoose = require('mongoose');
+mongoose.Promise = Promise;
 const models = require('../models');
-
-const dbConnection = require('../dbconnection')
 
 const articleData = require(`./${process.env.NODE_ENV}Data/articles`);
 const commentData = require(`./${process.env.NODE_ENV}Data/comments`);
@@ -11,8 +10,7 @@ const topicData = require(`./${process.env.NODE_ENV}Data/topics`);
 const userData = require(`./${process.env.NODE_ENV}Data/users`);
 
 function dbSeed (dbUrl) {
-  mongoose.connect(dbUrl);
-  mongoose.connection.dropDatabase()
+  return mongoose.connection.dropDatabase()
   .then(() => {
     console.log(`${process.env.NODE_ENV} db dropped`);
     return Promise.all([models.User.insertMany(userData), models.Topic.insertMany(topicData)])
@@ -61,19 +59,10 @@ function dbSeed (dbUrl) {
   })
   .then(() => {
     console.log(`${process.env.NODE_ENV} Comments seeded`);
-    mongoose.disconnect();
-    console.log(`disconnected from ${process.env.NODE_ENV} db, seeding complete`);
   })
   .catch(err => {
     console.log(err);
   });
 };
-
-
-if (process.env.NODE_ENV === 'test') {
-  dbSeed(dbConnection.testUrl);
-} else if (process.env.NODE_ENV === 'dev') {
-  dbSeed(dbConnection.devUrl);
-}
 
 module.exports = dbSeed;
