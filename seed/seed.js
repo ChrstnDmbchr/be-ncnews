@@ -10,9 +10,9 @@ const commentData = require(`./${process.env.NODE_ENV}Data/comments`);
 const topicData = require(`./${process.env.NODE_ENV}Data/topics`);
 const userData = require(`./${process.env.NODE_ENV}Data/users`);
 
-async function dbSeed (dbUrl) {
+function dbSeed (dbUrl) {
   mongoose.connect(dbUrl);
-  await mongoose.connection.dropDatabase()
+  mongoose.connection.dropDatabase()
   .then(() => {
     console.log(`${process.env.NODE_ENV} db dropped`);
     return Promise.all([models.User.insertMany(userData), models.Topic.insertMany(topicData)])
