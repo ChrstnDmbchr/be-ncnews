@@ -13,7 +13,7 @@ const userData = require(`./${process.env.NODE_ENV}Data/users`);
 async function dbSeed (dbUrl) {
   mongoose.connect(dbUrl);
   await mongoose.connection.dropDatabase()
-  .then(drop => {
+  .then(() => {
     console.log(`${process.env.NODE_ENV} db dropped`);
     return Promise.all([models.User.insertMany(userData), models.Topic.insertMany(topicData)])
   })
