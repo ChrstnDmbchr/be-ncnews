@@ -17,12 +17,9 @@ async function dbSeed (dbUrl) {
     console.log(`${process.env.NODE_ENV} db dropped`);
     return Promise.all([models.User.insertMany(userData), models.Topic.insertMany(topicData)])
   })
-  .then( async () => {
+  .then(([users, topics]) => {
     console.log(`${process.env.NODE_ENV} Users and Topics seeded`);
-
-    const users = await models.User.find({})
-    const topics = await models.Topic.find({}) 
-
+    
     const ARTICLES = articleData.map(article => {
       const topicId = topics.find(topic => {
         return topic.slug === article.topic;
@@ -40,13 +37,10 @@ async function dbSeed (dbUrl) {
       return article
     });
 
-    return models.Article.insertMany(ARTICLES);
+    return Promise.all([models.Article.insertMany(ARTICLES), users])
   })
-  .then(async () => {
+  .then(([articles, users]) => {
     console.log(`${process.env.NODE_ENV} Articles seeded`);
-
-    const articles = await models.Article.find({});
-    const users = await models.User.find({})
 
     const COMMENTS = commentData.map(comment => {
       const articleId = articles.find(article => {
