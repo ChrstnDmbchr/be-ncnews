@@ -59,7 +59,7 @@ async function dbSeed (dbUrl) {
 
     return models.Comment.insertMany(COMMENTS);
   })
-  .then(comms => {
+  .then(() => {
     console.log(`${process.env.NODE_ENV} Comments seeded`);
     mongoose.disconnect();
     console.log(`disconnected from ${process.env.NODE_ENV} db, seeding complete`);
