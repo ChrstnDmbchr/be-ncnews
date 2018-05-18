@@ -31,7 +31,17 @@ describe('API Endpoints', () => {
     });
   });
   // test
-  it('test working', (done) => {
-    done();
+  it('Topics - GET /api/topics', (done) => {
+    request
+    .get('/api/topics')
+    .end((err, res) => {
+      const topicTitles = res.body.topics.map(topic => {
+        return topic.title;
+      })
+      expect(res.body.topics.length).to.equal(2);
+      expect(res.status).to.equal(200);
+      expect(topicTitles).to.have.members(['Mitch', 'Cats'])
+      done();
+    })
   })
 })

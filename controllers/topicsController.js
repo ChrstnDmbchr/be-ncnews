@@ -1,6 +1,15 @@
+const mongoose = require('mongoose');
+const models = require('../models');
+
 exports.getAllTopics = (req, res, next) => {
-  res.status(200).send({
-    message: "GET /api/topics enpoint working"
+  models.Topic.find({})
+  .then(topics => {
+    res.status(200).send({
+      topics: topics
+    })
+  })
+  .catch(err => {
+    res.status(500).send(err)
   })
 }
 
