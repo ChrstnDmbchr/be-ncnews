@@ -23,7 +23,7 @@ describe('API Endpoints', () => {
   after(done => {
     mongoose.disconnect()
     .then(() => {
-      console.log(`disconnected from ${process.env.NODE_ENV} db`);
+      console.log(`tests completed, disconnected from ${process.env.NODE_ENV} db`);
       done();
     })
     .catch(err => {
