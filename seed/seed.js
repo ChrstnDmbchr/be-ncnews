@@ -23,7 +23,7 @@ async function dbSeed (dbUrl) {
     const users = await models.User.find({})
     const topics = await models.Topic.find({}) 
 
-    const ARTICLES = articleData.map((article, i, arr) => {
+    const ARTICLES = articleData.map(article => {
       const topicId = topics.find(topic => {
         return topic.slug === article.topic;
       })._id;
