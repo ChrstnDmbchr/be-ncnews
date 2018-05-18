@@ -17,7 +17,7 @@ async function dbSeed (dbUrl) {
     console.log(`${process.env.NODE_ENV} db dropped`);
     return Promise.all([models.User.insertMany(userData), models.Topic.insertMany(topicData)])
   })
-  .then( async res => {
+  .then( async () => {
     console.log(`${process.env.NODE_ENV} Users and Topics seeded`);
 
     const users = await models.User.find({})
@@ -42,7 +42,7 @@ async function dbSeed (dbUrl) {
 
     return models.Article.insertMany(ARTICLES);
   })
-  .then(async arts => {
+  .then(async () => {
     console.log(`${process.env.NODE_ENV} Articles seeded`);
 
     const articles = await models.Article.find({});
