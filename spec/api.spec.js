@@ -8,7 +8,7 @@ const request = require('supertest')(app);
 const dbSeed = require('../seed/seed');
 
 describe('API Endpoints', () => {
-  // seed excecuted before tests
+  // seed excecuted before all tests
   before(done => {
     dbSeed(testUrl)
     .then(() => {
@@ -19,7 +19,7 @@ describe('API Endpoints', () => {
       console.log(err);
     });
   });
-  // disconnect from DB after tests
+  // disconnect from DB after all tests
   after(done => {
     mongoose.disconnect()
     .then(() => {
