@@ -83,6 +83,13 @@ describe('API Endpoints', () => {
         expect(res.body.article.title).to.equal("this is a test title");
         expect(res.body.article.body).to.equal("this is a test body");
         expect(res.body.article.created_by).to.equal(`${userId}`);
+        models.Article.count({title: "this is a test title"})
+        .then(count => {
+          expect(count).to.equal(1);
+        })
+        .catch(err => {
+          console.log(err);
+        })
         done();
       })
     })
