@@ -27,7 +27,6 @@ describe('API Endpoints', () => {
   after(done => {
     mongoose.disconnect()
     .then(() => {
-      console.log(`tests completed, disconnected from ${process.env.NODE_ENV} db`);
       done();
     })
     .catch(err => {
@@ -40,7 +39,7 @@ describe('API Endpoints', () => {
     .get('/api/topics')
     .end((err, res) => {
       if (err) console.log(err);
-      
+
       savedTopics = res.body.topics.filter(t => t.title === 'Cats');
 
       const topicTitles = res.body.topics.map(topic => {
