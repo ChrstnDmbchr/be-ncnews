@@ -14,8 +14,14 @@ exports.getAllTopics = (req, res, next) => {
 }
 
 exports.getAllTopicArticles = (req, res, next) => {
-  res.status(200).send({
-    message: `GET /api/topics enpoint working with topic_id ${req.params.topic_id}`
+  models.Article.find({belongs_to: `${req.params.topic_id}`})
+  .then(articles => {
+    res.status(200).send({
+      articles: articles
+    })
+  })
+  .catch(err => {
+    res.status(500).send(err)
   })
 }
 
