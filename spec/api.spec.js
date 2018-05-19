@@ -39,6 +39,8 @@ describe('API Endpoints', () => {
     request
     .get('/api/topics')
     .end((err, res) => {
+      if (err) console.log(err);
+      
       savedTopics = res.body.topics.filter(t => t.title === 'Cats');
 
       const topicTitles = res.body.topics.map(topic => {
@@ -56,9 +58,12 @@ describe('API Endpoints', () => {
     request
     .get(`/api/topics/${savedTopics[0]._id}/articles`)
     .end((err, res) => {
+      if (err) console.log(err);
+
       const articleTitles = res.body.articles.map(article => {
         return article.title;
       })
+
       expect(res.body.articles.length).to.equal(2);
       expect(articleTitles).to.have.members(["They're not exactly dogs, are they?", "UNCOVERED: catspiracy to bring down democracy"]);
       expect(Object.keys(res.body).length).to.equal(1)
@@ -80,6 +85,8 @@ describe('API Endpoints', () => {
         user_id: userId
       })
       .end((err, res) => {
+        if (err) console.log(err);
+
         expect(res.body.article.title).to.equal("this is a test title");
         expect(res.body.article.body).to.equal("this is a test body");
         expect(res.body.article.created_by).to.equal(`${userId}`);
