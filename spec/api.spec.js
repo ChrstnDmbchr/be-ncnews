@@ -6,10 +6,12 @@ const expect = require('chai').expect;
 const app = require('../app');
 const request = require('supertest')(app);
 const dbSeed = require('../seed/seed');
+const models = require('../models');
 
 describe('API Endpoints', () => {
   // var to keep track of id's
   let savedTopics
+  let userId
   // seed excecuted before all tests
   before(done => {
     dbSeed(testUrl)
@@ -61,6 +63,29 @@ describe('API Endpoints', () => {
       expect(articleTitles).to.have.members(["They're not exactly dogs, are they?", "UNCOVERED: catspiracy to bring down democracy"]);
       expect(Object.keys(res.body).length).to.equal(1)
       done();
+    });
+  });
+  it('TOPICS - POST /api/topics/:topic_id/articles', (done) => {
+    models.User.findOne({name: 'mitch'}).then(user => {
+      userId = user._id
+      return Promise.all([])
     })
+    .then(() => {
+      request
+      .post(`/api/topics/${savedTopics[0]._id}/articles`)
+      .send({
+        title: "this is a test title",
+        body: "this is a test body",
+        // including userId for now to get around it being a required field
+        user_id: userId
+      })
+      .end((err, res) => {
+        expect(res.body.article.title).to.equal("this is a test title");
+        expect(res.body.article.body).to.equal("this is a test body");
+        expect(res.body.article.created_by).to.equal(`${userId}`);
+        done();
+      })
+    })
+    .catch(err => console.log(err));
   })
 })

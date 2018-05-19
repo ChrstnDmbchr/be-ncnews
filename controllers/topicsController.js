@@ -26,7 +26,21 @@ exports.getAllTopicArticles = (req, res, next) => {
 }
 
 exports.postArticleTopic = (req, res, next) => {
-  res.status(200).send({
-    message: `POST /api/topics enpoint working with topic_id ${req.params.topic_id}`
+  const article = new models.Article({
+    title: req.body.title,
+    body: req.body.body,
+    belongs_to: req.params.topic_id,
+    // created_by added for now to get around it being a required field, user_id included in body
+    created_by: req.body.user_id
+  })
+  .save()
+  .then(result => {
+    res.status(201).send({
+      message: "article created",
+      article: result
+    })
+  })
+  .catch(err => {
+    res.status(500).send(err)
   })
 }
