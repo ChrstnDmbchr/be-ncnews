@@ -29,9 +29,7 @@ function dbSeed (dbUrl) {
   
       article.belongs_to = topicId;
       article.created_by = userId;
-      article.vote = 0;
   
-      delete article.topic;
       return article
     });
 

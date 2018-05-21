@@ -23,20 +23,64 @@ exports.getArticle = (req, res, next) => {
 }
 
 exports.getArticleComments = (req, res, next) => {
-  res.status(200).send({
-    message: `GET api/articles/:article_id/comments with id ${req.params.article_id} working`
+  models.Comment.find({belongs_to: req.params.article_id})
+  .then(comments => {
+    res.status(200).send({
+      comments: comments
+    })
+  })
+  .catch(err => {
+    res.status(500).send(err);
   })
 }
 
 exports.addArticleComments = (req, res, next) => {
-  res.status(200).send({
-    message: `POST api/articles/:article_id/comments with id ${req.params.article_id} working`
+  models.Comment.create({
+    body: req.body.body,
+    belongs_to: req.params.article_id,
+    // created_by added for now to get around it being a required field, user_id included in body
+    created_by: req.body.created_by
+  })
+  .then(comment => {
+    res.status(201).send({
+      message: 'comment created',
+      comment: comment
+    })
+  })
+  .catch(err => {
+    res.status(500).send(err);
   })
 }
 
 exports.articleVote = (req, res, next) => {
-  res.status(200).send({
-    message: `PUT api/articles/:article_id with id ${req.params.article_id}`,
-    query: req.query
-  })
+  if (!Object.keys(req.query).includes('vote')) {
+    return res.status(400).send({
+      error: "invalid query, please user the 'vote' query followed by up/down"
+    });
+  };
+
+  if (req.query.vote === 'up') {
+    models.Article.findByIdAndUpdate({_id: req.params.article_id}, {$inc: {votes: 1}})
+    .then(article => {
+      res.status(201).send({
+        message: "article vote up by 1!",
+        vote_count: article.votes + 1
+      })
+    })
+    .catch(err => res.status(500).send(err))
+  } else if (req.query.vote === 'down') {
+    models.Article.findByIdAndUpdate({_id: req.params.article_id}, {$inc: {votes: -1}})
+    .then(article => {
+      res.status(201).send({
+        message: "article vote down by 1!",
+        vote_count: article.votes -1
+      })
+    })
+    .catch(err => res.status(500).send(err))
+  } else {
+    res.status(400).send ({
+      error: "please use only up/down with vote"
+    })
+  }
+  
 }

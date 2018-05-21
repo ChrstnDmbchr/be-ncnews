@@ -31,7 +31,7 @@ exports.postArticleTopic = (req, res, next) => {
     body: req.body.body,
     belongs_to: req.params.topic_id,
     // created_by added for now to get around it being a required field, user_id included in body
-    created_by: req.body.user_id
+    created_by: req.body.created_by
   })
   .then(result => {
     res.status(201).send({
