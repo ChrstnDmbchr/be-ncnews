@@ -9,12 +9,12 @@ const dbSeed = require('../seed/seed');
 const models = require('../models');
 
 describe('API Endpoints', () => {
-  // var to keep track of id's
+  // variables to keep track of id's
   let savedTopics
   let savedUsername
   let articleId
   let commentId
-  // seed excecuted before all tests
+  // seed excecuted before all tests and values assigned to variables
   before(() => {
     return dbSeed(testUrl)
     .then(data => {
