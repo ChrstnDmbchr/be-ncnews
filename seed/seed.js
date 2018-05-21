@@ -33,9 +33,9 @@ function dbSeed (dbUrl) {
       return article
     });
 
-    return Promise.all([models.Article.insertMany(ARTICLES), users])
+    return Promise.all([models.Article.insertMany(ARTICLES), users, topics])
   })
-  .then(([articles, users]) => {
+  .then(([articles, users, topics]) => {
     console.log(`${process.env.NODE_ENV} Articles seeded`);
 
     const COMMENTS = commentData.map(comment => {
@@ -53,10 +53,11 @@ function dbSeed (dbUrl) {
       return comment
     });
 
-    return models.Comment.insertMany(COMMENTS);
+    return Promise.all([models.Comment.insertMany(COMMENTS), articles, users, topics])
   })
-  .then(() => {
+  .then(data => {
     console.log(`${process.env.NODE_ENV} Comments seeded`);
+    return data
   })
   .catch(err => {
     console.log(err);

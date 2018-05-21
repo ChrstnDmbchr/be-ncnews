@@ -1,5 +1,11 @@
+const model = require('../models');
+
 exports.getUser = (req, res, next) => {
-  res.status(200).send({
-    message: `GET api/users/:username with username ${req.params.username} working`
+  model.User.findOne({username: req.params.username})
+  .then(user => {
+    res.status(200).send(user);
   })
-}
+  .catch(err => {
+    res.status(500).send(err)
+  });
+};

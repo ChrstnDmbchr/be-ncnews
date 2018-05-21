@@ -17,7 +17,7 @@ exports.commentVote = (req, res, next) => {
     })
     .catch(err => res.status(500).send(err));
   } else if (req.query.vote === 'down') {
-    models.Comment.findByIdAndUpdate({_id: req.params.comments_id}, {$inc: {votes: -1}}, { new: true})
+    models.Comment.findByIdAndUpdate({_id: req.params.comments_id}, {$inc: {votes: -1}}, { new: true })
     .then(comment => {
       res.status(201).send({
         message: "comment vote down by 1!",

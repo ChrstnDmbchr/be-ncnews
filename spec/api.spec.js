@@ -11,13 +11,17 @@ const models = require('../models');
 describe('API Endpoints', () => {
   // var to keep track of id's
   let savedTopics
-  let userId
+  let savedUsername
   let articleId
   let commentId
   // seed excecuted before all tests
   before(() => {
     return dbSeed(testUrl)
-    .then(() => {
+    .then(data => {
+      savedUsername = data[2][1].username
+      savedTopics = data[3].filter(t => t.title === 'Cats');
+      articleId = data[1][0]._id
+      commentId = data[0][0]._id
       console.log('seeding complete')
     })
     .catch(err => {
@@ -37,8 +41,6 @@ describe('API Endpoints', () => {
     return request
     .get('/api/topics')
     .then(res => {
-      savedTopics = res.body.topics.filter(t => t.title === 'Cats');
-
       const topicTitles = res.body.topics.map(topic => {
         return topic.title;
       })
@@ -81,7 +83,6 @@ describe('API Endpoints', () => {
     return request
     .get('/api/articles')
     .then(res => {
-      articleId = res.body.articles[0]._id
       expect(Object.keys(res.body)).to.include('articles');
       expect(res.body.articles.length).to.equal(5);
     });
@@ -99,7 +100,6 @@ describe('API Endpoints', () => {
     return request
     .get(`/api/articles/${articleId}/comments`)
     .then(res => {
-      commentId = res.body.comments[0]._id
       expect(res.body.comments.length).to.equal(2);
       expect(Array.isArray(res.body.comments)).to.be.true;
     });
@@ -152,6 +152,16 @@ describe('API Endpoints', () => {
       expect(res.body.comment._id).to.equal(`${commentId}`);
       expect(res.body.message).to.equal('comment deleted');
       expect(res.status).to.equal(200);
+    });
+  });
+
+  // Users
+  it('Users - GET /api/users/:username', () => {
+    return request
+    .get(`/api/users/${savedUsername}`)
+    .then(res => {
+      expect(res.body.name).to.equal('mitch');
+      expect(res.body.username).to.equal(savedUsername);
     })
-  })  
+  })
 });
