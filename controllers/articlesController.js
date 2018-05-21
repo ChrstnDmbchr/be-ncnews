@@ -63,27 +63,17 @@ exports.articleVote = (req, res, next) => {
     });
   };
 
-  if (req.query.vote === 'up') {
-    models.Article.findByIdAndUpdate({_id: req.params.article_id}, {$inc: {votes: 1}}, { new: true })
-    .then(article => {
-      res.status(201).send({
-        message: "article vote up by 1!",
-        vote_count: article.votes
-      });
-    })
-    .catch(err => res.status(500).send(err));
-  } else if (req.query.vote === 'down') {
-    models.Article.findByIdAndUpdate({_id: req.params.article_id}, {$inc: {votes: -1}}, { new: true })
-    .then(article => {
-      res.status(201).send({
-        message: "article vote down by 1!",
-        vote_count: article.votes
-      });
-    })
-    .catch(err => res.status(500).send(err));
-  } else {
-    res.status(400).send ({
-      error: "please use only up/down with vote"
+  let vote
+  if (req.query.vote === 'up') vote = 1
+  else if (req.query.vote === 'down') vote = -1
+
+  models.Article.findByIdAndUpdate({_id: req.params.article_id}, {$inc: {votes: vote}}, { new: true })
+  .then(article => {
+     res.status(201).send({
+      message: `article vote modified by ${vote}!`,
+      vote_count: article.votes
     });
-  }; 
+  })
+  .catch(err => res.status(500).send(err));
+  
 };
