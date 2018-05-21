@@ -26,14 +26,13 @@ exports.getAllTopicArticles = (req, res, next) => {
 }
 
 exports.postArticleTopic = (req, res, next) => {
-  const article = new models.Article({
+  models.Article.create({
     title: req.body.title,
     body: req.body.body,
     belongs_to: req.params.topic_id,
     // created_by added for now to get around it being a required field, user_id included in body
     created_by: req.body.user_id
   })
-  .save()
   .then(result => {
     res.status(201).send({
       message: "article created",

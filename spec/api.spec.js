@@ -70,7 +70,8 @@ describe('API Endpoints', () => {
     });
   });
   it('TOPICS - POST /api/topics/:topic_id/articles', (done) => {
-    models.User.findOne({name: 'mitch'}).then(user => {
+    models.User.findOne({name: 'mitch'})
+    .then(user => {
       userId = user._id
       return Promise.all([])
     })

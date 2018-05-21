@@ -14,7 +14,7 @@ const apiRoutes = require('./routes/apiRoutes');
 
 mongoose.connect(connectionUrl);
 
-app.use(morgan('dev'));
+if (process.env.NODE_ENV !== 'test') app.use(morgan('dev'));
 app.use(bodyParser);
 
 app.use('/api', apiRoutes);
