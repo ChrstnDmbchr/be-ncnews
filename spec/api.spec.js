@@ -13,6 +13,7 @@ describe('API Endpoints', () => {
   let savedTopics
   let userId
   let articleId
+  let commentId
   // seed excecuted before all tests
   before(() => {
     return dbSeed(testUrl)
@@ -98,6 +99,7 @@ describe('API Endpoints', () => {
     return request
     .get(`/api/articles/${articleId}/comments`)
     .then(res => {
+      commentId = res.body.comments[0]._id
       expect(res.body.comments.length).to.equal(2);
       expect(Array.isArray(res.body.comments)).to.be.true;
     });
@@ -116,15 +118,32 @@ describe('API Endpoints', () => {
   it('Articles - PUT /api/articles/:article_id - vote up', () => {
     return request
     .put(`/api/articles/${articleId}?vote=up`)
-    .then (res => {
+    .then(res => {
       expect(res.body.vote_count).to.equal(1);
     })
-  })
+  });
   it('Articles - PUT /api/articles/:article_id - vote down', () => {
     return request
     .put(`/api/articles/${articleId}?vote=down`)
     .then(res => {
       expect(res.body.vote_count).to.equal(0);
     })
-  })
+  });
+
+  //Comments
+  it('Comments - PUT /api/comments/:comment_id - vote up', () => {
+    return request
+    .put(`/api/comments/${commentId}?vote=up`)
+    .then(res => {
+      expect(res.body.vote_count).to.equal(8);
+    });
+  });
+  it('Comments - PUT /api/comments/:comment_id - vote down', () => {
+    return request
+    .put(`/api/comments/${commentId}?vote=down`)
+    .then(res => {
+      expect(res.body.vote_count).to.equal(7);
+    });
+  });
+  
 });

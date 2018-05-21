@@ -64,20 +64,20 @@ exports.articleVote = (req, res, next) => {
   };
 
   if (req.query.vote === 'up') {
-    models.Article.findByIdAndUpdate({_id: req.params.article_id}, {$inc: {votes: 1}})
+    models.Article.findByIdAndUpdate({_id: req.params.article_id}, {$inc: {votes: 1}}, { new: true })
     .then(article => {
       res.status(201).send({
         message: "article vote up by 1!",
-        vote_count: article.votes + 1
+        vote_count: article.votes
       });
     })
     .catch(err => res.status(500).send(err));
   } else if (req.query.vote === 'down') {
-    models.Article.findByIdAndUpdate({_id: req.params.article_id}, {$inc: {votes: -1}})
+    models.Article.findByIdAndUpdate({_id: req.params.article_id}, {$inc: {votes: -1}}, { new: true })
     .then(article => {
       res.status(201).send({
         message: "article vote down by 1!",
-        vote_count: article.votes -1
+        vote_count: article.votes
       });
     })
     .catch(err => res.status(500).send(err));
