@@ -12,6 +12,7 @@ describe('API Endpoints', () => {
   // var to keep track of id's
   let savedTopics
   let userId
+  let articleId
   // seed excecuted before all tests
   before(done => {
     dbSeed(testUrl)
@@ -33,7 +34,7 @@ describe('API Endpoints', () => {
       console.log(err);
     });
   });
-  // test
+  // Topics
   it('Topics - GET /api/topics', (done) => {
     request
     .get('/api/topics')
@@ -69,7 +70,7 @@ describe('API Endpoints', () => {
       done();
     });
   });
-  it('TOPICS - POST /api/topics/:topic_id/articles', (done) => {
+  it('Topics - POST /api/topics/:topic_id/articles', (done) => {
     models.User.findOne({name: 'mitch'})
     .then(user => {
       userId = user._id
@@ -102,5 +103,27 @@ describe('API Endpoints', () => {
       })
     })
     .catch(err => console.log(err));
+  })
+  // Articles
+  it('Articles - GET /api/articles', (done) => {
+    request
+    .get('/api/articles')
+    .end((err, res) => {
+      if (err) console.log(err);
+      articleId = res.body.articles[0]._id
+      expect(Object.keys(res.body)).to.include('articles');
+      expect(res.body.articles.length).to.equal(5);
+      done();
+    });
+  });
+  it('Articles - GET /api/articles/:article_id', (done) => {
+    request
+    .get(`/api/articles/${articleId}`)
+    .end((err, res) => {
+      if (err) console.log(err);
+      expect(Object.keys(res.body).length).to.equal(7);
+      expect(res.body.title).to.equal('Living in the shadow of a great man');
+      done();
+    })
   })
 })
