@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
 
+const apiRoutes = require('./routes.json');
+
 const articlesRoutes = require('./articlesRoutes');
 const commentsRoutes = require('./commentsRoutes');
 const topicsRoutes = require('./topicsRoutes');
 const usersRoutes = require('./usersRoutes');
 
 router.get('/', (req, res, next) => {
-  // serve html page with route info
-  res.status(200).send({
-    message: "GET /api working"
-  });
+  // serves object containing all route info
+  res.status(200).send(apiRoutes);
 })
 
 router.use('/topics', topicsRoutes);
