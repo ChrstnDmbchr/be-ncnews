@@ -18,10 +18,11 @@ describe('API Endpoints', () => {
   before(() => {
     return dbSeed(testUrl)
     .then(data => {
-      savedUsername = data[2][1].username
-      savedTopics = data[3].filter(t => t.title === 'Cats');
-      articleId = data[1][0]._id
-      commentId = data[0][0]._id
+      [comments, articles, users, topics] = data
+      savedUsername = users[1].username
+      savedTopics = topics.filter(t => t.title === 'Cats');
+      articleId = articles[0]._id
+      commentId = comments[0]._id
       console.log('seeding complete')
     })
     .catch(err => {
