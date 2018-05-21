@@ -62,82 +62,69 @@ describe('API Endpoints', () => {
     });
   });
   it('Topics - POST /api/topics/:topic_id/articles', () => {
-    models.User.findOne({name: 'mitch'})
-    .then(user => {
-      userId = user._id
-      return Promise.all([])
+    return request
+    .post(`/api/topics/${savedTopics[0]._id}/articles`)
+    .send({
+      title: "this is a test title",
+      body: "this is a test body",
     })
-    .then(() => {
-      return request
-      .post(`/api/topics/${savedTopics[0]._id}/articles`)
-      .send({
-        title: "this is a test title",
-        body: "this is a test body",
-        // including userId for now to get around it being a required field
-        created_by: userId
-      })
-      .then(res => {
-        expect(res.body.article.title).to.equal("this is a test title");
-        expect(res.body.article.body).to.equal("this is a test body");
-        expect(res.body.article.created_by).to.equal(`${userId}`);
-        expect(res.status).to.equal(201);
-      });
+    .then(res => {
+      expect(res.body.article.title).to.equal("this is a test title");
+      expect(res.body.article.body).to.equal("this is a test body");
+      expect(res.status).to.equal(201);
     });
+  });
+
+  //Articles
+  it('Articles - GET /api/articles', () => {
+    return request
+    .get('/api/articles')
+    .then(res => {
+      articleId = res.body.articles[0]._id
+      expect(Object.keys(res.body)).to.include('articles');
+      expect(res.body.articles.length).to.equal(5);
+    });
+  });
+  it('Articles - GET /api/articles/:article_id', () => {
+    return request
+    .get(`/api/articles/${articleId}`)
+    .then(res => {
+      expect(typeof res.body).to.equal('object');
+      expect(Object.keys(res.body).length).to.equal(7);
+      expect(res.body.title).to.equal('Living in the shadow of a great man');
+    });
+  });
+  it('Articles - GET /api/articles/:article_id/comments', () => {
+    return request
+    .get(`/api/articles/${articleId}/comments`)
+    .then(res => {
+      expect(res.body.comments.length).to.equal(2);
+      expect(Array.isArray(res.body.comments)).to.be.true;
+    });
+  });
+  it('Articles - POST /api/articles/:article_id/comments', () => {
+    return request
+    .post(`/api/articles/${articleId}/comments`)
+    .send({
+      body: "this is a test comment",
+    })
+    .then(res => {
+      expect(res.body.message).to.equal('comment created');
+      expect(res.body.comment.body).to.equal('this is a test comment');
+    });
+  });
+  it('Articles - PUT /api/articles/:article_id - vote up', () => {
+    return request
+    .put(`/api/articles/${articleId}?vote=up`)
+    .then (res => {
+      expect(res.body.vote_count).to.equal(1);
+    })
   })
-
-  // Articles
-  // it('Articles - GET /api/articles', () => {
-  //   return request
-  //   .get('/api/articles')
-  //   .then(res => {
-  //     articleId = res.body.articles[0]._id
-  //     expect(Object.keys(res.body)).to.include('articles');
-  //     expect(res.body.articles.length).to.equal(4);
-  //   });
-  // });
-  // it('Articles - GET /api/articles/:article_id', () => {
-  //   return request
-  //   .get(`/api/articles/${articleId}`)
-  //   .then(res => {
-  //     if (err) console.log(err);
-  //     expect(typeof res.body).to.equal('object');
-  //     expect(Object.keys(res.body).length).to.equal(7);
-  //     expect(res.body.title).to.equal('Living in the shadow of a great man');
-  //   });
-  // });
-  // it('Articles - GET /api/articles/:article_id/comments', () => {
-  //   return request
-  //   .get(`/api/articles/${articleId}/comments`)
-  //   .then(res => {
-  //     expect(res.body.comments.length).to.equal(2);
-  //     expect(Array.isArray(res.body.comments)).to.be.true;
-  //   });
-  // });
-  // it('Articles - POST /api/articles/:article_id/comments', () => {
-  //   return request
-  //   .post(`/api/articles/${articleId}/comments`)
-  //   .send({
-  //     body: "this is a test comment",
-  //     // including userId for now to get around it being a required field
-  //     created_by: userId
-  //   })
-  //   .then(res => {
-  //     expect(res.body.message).to.equal('comment created');
-  //     expect(res.body.comment.body).to.equal('this is a test comment');
-  //   });
-  // });
-  // it('Articles - PUT /api/articles/:article_id - vote up', () => {
-  //   return request
-  //   .put(`/api/articles/${articleId}?vote=up`)
-  //   .then (res => {
-      
-  //   })
-  // })
-  // it('Articles - PUT /api/articles/:article_id - vote down', () => {
-  //   return request
-  //   .put(`/api/articles/${articleId}?vote=down`)
-  //   .then(res => {
-
-  //   })
-  // })
+  it('Articles - PUT /api/articles/:article_id - vote down', () => {
+    return request
+    .put(`/api/articles/${articleId}?vote=down`)
+    .then(res => {
+      expect(res.body.vote_count).to.equal(0);
+    })
+  })
 });

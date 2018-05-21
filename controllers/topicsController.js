@@ -26,20 +26,24 @@ exports.getAllTopicArticles = (req, res, next) => {
 }
 
 exports.postArticleTopic = (req, res, next) => {
-  models.Article.create({
-    title: req.body.title,
-    body: req.body.body,
-    belongs_to: req.params.topic_id,
-    // created_by added for now to get around it being a required field, user_id included in body
-    created_by: req.body.created_by
-  })
-  .then(result => {
-    res.status(201).send({
-      message: "article created",
-      article: result
+  // added to hack created_by value TODO: replace when user auth is added 
+  models.User.findOne({name: 'mitch'})
+  .then(user => {
+    models.Article.create({
+      title: req.body.title,
+      body: req.body.body,
+      belongs_to: req.params.topic_id,
+      // user id from db call here
+      created_by: user._id
     })
-  })
-  .catch(err => {
-    res.status(500).send(err)
+    .then(result => {
+      res.status(201).send({
+        message: "article created",
+        article: result
+      })
+    })
+    .catch(err => {
+      res.status(500).send(err)
+    })
   })
 }
