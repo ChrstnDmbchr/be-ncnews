@@ -145,5 +145,13 @@ describe('API Endpoints', () => {
       expect(res.body.vote_count).to.equal(7);
     });
   });
-  
+  it('Comments - DELETE /api/comments/:comment_id', () => {
+    return request
+    .delete(`/api/comments/${commentId}`)
+    .then(res => {
+      expect(res.body.comment._id).to.equal(`${commentId}`);
+      expect(res.body.message).to.equal('comment deleted');
+      expect(res.status).to.equal(200);
+    })
+  })  
 });

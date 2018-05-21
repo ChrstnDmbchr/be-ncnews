@@ -33,7 +33,14 @@ exports.commentVote = (req, res, next) => {
 }
 
 exports.deleteComment = (req, res, next) => {
-  res.status(200).send({
-    message: `DELETE /api/comments/:comments_id with id ${req.params.comments_id}`
+  models.Comment.findByIdAndRemove({_id: req.params.comments_id})
+  .then(comment => {
+    res.status(200).send({
+      message: "comment deleted",
+      comment: comment
+    })
   })
-}
+  .catch(err => {
+    res.status(500).send(err);
+  });
+};
