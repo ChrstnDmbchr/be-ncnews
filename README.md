@@ -1,53 +1,33 @@
-## Northcoders News API
+## NCNews Backend API
+An API built with Node, Express and Mongo that will serve data to the front end application in the Northcoders News sprint.
 
-### Background
+### Prerequisites
+#### Database connections
+The database connections strings are in the `dbconnection` directory and this is where the inforamtion is source depending on whether the `process.env.NODE_ENV` variable has been set to dev or test. 
 
-We will be building the API which to use in the Northcoders News Sprint during the Front End block of the course.
+if you wish to change the name of the databases created this can be modified in `dbconnection/index.js` as follows:
+```
+exports.devUrl = 'mongodb://localhost:27017/<NEW DB NAME>'
+exports.testUrl = 'mongodb://localhost:27017/<NEW DB NAME'
+```
 
-Our database will be MongoDB. Your Mongoose models have been created for you so that you can see what the data should look like.
+By default the databases will be named `ncnews` and `ncnews-test` respectively.
 
-We have also built a functioning API at http://northcoders-news-api.herokuapp.com/.
+#### Database seeding
 
-Look closely at the response you get for each route on http://northcoders-news-api.herokuapp.com/ You will notice that we also send data such as the comment count for each article. You will need to think carefully about how to do this in your API.
+Seeding scripts have been provided to seed both dev and test databases
 
-### Mongoose Documentation
+To seed the dev database run 
+```
+npm run seed-dev
+```
+To seed the test database run 
+```
+npm run seed-test
+```
+NOTE: Only the dev seed script is required before the app runs, the test database will be seeded before every test
 
-The below are all model methods that you call on your models.
-
-* [find](http://mongoosejs.com/docs/api.html#model_Model.find)
-* [findOne](http://mongoosejs.com/docs/api.html#model_Model.findOne)
-* [findOneAndUpdate](http://mongoosejs.com/docs/api.html#model_Model.findOneAndUpdate)
-* [findOneAndRemove](http://mongoosejs.com/docs/api.html#model_Model.findOneAndRemove)
-* [findById](http://mongoosejs.com/docs/api.html#model_Model.findById)
-* [findByIdAndUpdate](http://mongoosejs.com/docs/api.html#model_Model.findByIdAndUpdate)
-* [findByIdAndRemove](http://mongoosejs.com/docs/api.html#model_Model.findByIdAndRemove)
-* [update](http://mongoosejs.com/docs/api.html#model_Model.update)
-
-There are also some methods that can be called on the documents that get returned. These are:
-
-* [remove](http://mongoosejs.com/docs/api.html#model_Model-remove)
-* [save](http://mongoosejs.com/docs/api.html#model_Model-save)
-* [count](http://mongoosejs.com/docs/api.html#model_Model.count)
-
-### Step 1 - Seeding
-
-Data has been provided for both testing and development environments so you will need to write a seed function to seed your database. You should think about how you will write your seed file to use either test data or dev data depending on the environment that you're running in.
-
-1.  You will need to seed the topics, followed by the articles and the users. Each article should belong to a topic, referenced by a topic's \_id property. Each article should also have a random number of comments. Each comment should have been created by a random user (referenced by their \_id property) and should also belong to a specific article (referenced by its \_id property too). Use a library such as [faker](https://www.npmjs.com/package/faker) or [chance](https://www.npmjs.com/package/chance) to generate random comments.
-
-### Step 2 - Building and Testing
-
-1.  Build your Express App
-2.  Mount an API Router onto your app
-3.  Define the routes described below
-4.  Define controller functions for each of your routes
-5.  Use proper project configuration from the offset, being sure to treat development and test differently.
-6.  Test each route as you go. Remember to test the happy and the unhappy paths! Make sure your error messages are helpful and your error status codes are chosen correctly. Remember to seed the test database using the seeding function and make the saved data available to use within your test suite.
-7.  Once you have all your routes start to tackle responding with the vote and comment counts on article requests like this http://northcoders-news-api.herokuapp.com/api/articles
-
-**HINT** Make sure to drop and reseed your test database with every test. This will make it much easier to keep track of your data throughout. In order for this to work, you are going to need to keep track of the MongoIDs your seeded docs have been given. In order to do this, you might want to consider what your seed file returns, and how you can use this in your tests.
-
-### Routes
+### API Routes
 
 ``` http
 GET /api
@@ -125,12 +105,19 @@ GET /api/users/:username
 
 Returns a JSON object with the profile data for the specified user.
 
-### Step 3 - Hosting
+### Testing
+All API enpoints have been tested against the data that was seeded with the test database.
 
-Once you are happy with your seed/dev file, prepare your project for production. You will need to seed the development data to mLab, and host the API on Heroku. If you've forgotten how to do this, you may want to look at this tutorial! https://www.sitepoint.com/deploy-rest-api-in-30-mins-mlab-heroku/
+The test database is re-seeded everytime before the test suite is ran
 
-### Step 4 - Preparing for your review and portfolio
+To run the test suite run the script
+```
+npm test
+```
 
-Finally, you should write a README for this project (and remove this one). The README should be broken down like this: https://gist.github.com/PurpleBooth/109311bb0361f32d87a2
+### Hosting
 
-It should also include the link where your herokuapp is hosted.
+The backend API is hosted on Heroku and the Mongo DB is hosted on Mlabs
+
+[Click Here](https://fast-hamlet-42674.herokuapp.com/api) to access the routes page.
+
