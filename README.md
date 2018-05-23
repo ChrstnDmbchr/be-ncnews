@@ -1,7 +1,7 @@
-## NCNews Backend API
+# NCNews Backend API
 An API built with Node, Express and MongoDB that will serve data to the front end application in the Northcoders News sprint.
 
-### Prerequisites
+## Prerequisites
 
 #### Database connections
 The database connections strings are in the `dbconnection` directory and this is where the information is source depending on whether the `process.env.NODE_ENV` variable has been set to dev or test. 
@@ -30,7 +30,7 @@ npm run seed-test
 ```
 NOTE: Only the dev seed script is required before the app runs, the test database will be seeded before every test block.
 
-### API Routes
+## API Routes
 
 ``` http
 GET /api
@@ -108,7 +108,7 @@ GET /api/users/:username
 
 Returns a JSON object with the profile data for the specified user.
 
-### Testing
+## Testing
 All API enpoints have been tested against the data that was seeded with the test database.
 
 The test database is re-seeded everytime before the test suite is ran.
@@ -118,7 +118,7 @@ To run the test suite run the script:
 npm test
 ```
 
-### Hosting
+## Hosting
 
 The backend API is hosted on Heroku and the Mongo DB is hosted on Mlabs
 
