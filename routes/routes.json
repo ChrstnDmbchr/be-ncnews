@@ -1,6 +1,6 @@
 {
   "GET /api":
-    "Serves a JSON object with documentation for all the available endpoints",
+    "Serves an HTML page with documentation for all the available endpoints",
   "GET /api/topics": "Get all the topics",
   "GET /api/topics/:topic_id/articles":
     "Return all the articles for a certain topic",
