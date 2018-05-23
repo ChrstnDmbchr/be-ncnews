@@ -2,10 +2,11 @@
 An API built with Node, Express and Mongo that will serve data to the front end application in the Northcoders News sprint.
 
 ### Prerequisites
-#### Database connections
-The database connections strings are in the `dbconnection` directory and this is where the inforamtion is source depending on whether the `process.env.NODE_ENV` variable has been set to dev or test. 
 
-if you wish to change the name of the databases created this can be modified in `dbconnection/index.js` as follows:
+#### Database connections
+The database connections strings are in the `dbconnection` directory and this is where the information is source depending on whether the `process.env.NODE_ENV` variable has been set to dev or test. 
+
+If you wish to change the name of the databases created this can be modified in `dbconnection/index.js` as follows:
 ```
 exports.devUrl = 'mongodb://localhost:27017/<NEW DB NAME>'
 exports.testUrl = 'mongodb://localhost:27017/<NEW DB NAME'
@@ -13,19 +14,21 @@ exports.testUrl = 'mongodb://localhost:27017/<NEW DB NAME'
 
 By default the databases will be named `ncnews` and `ncnews-test` respectively.
 
+If you wish to re host this app on Heroku set the environment variable of the hosted database connection string to `MONGODB_URI`.
+
 #### Database seeding
 
-Seeding scripts have been provided to seed both dev and test databases
+Seeding scripts have been provided to seed both dev and test databases.
 
-To seed the dev database run 
+To seed the dev database run:
 ```
 npm run seed-dev
 ```
-To seed the test database run 
+To seed the test database run :
 ```
 npm run seed-test
 ```
-NOTE: Only the dev seed script is required before the app runs, the test database will be seeded before every test
+NOTE: Only the dev seed script is required before the app runs, the test database will be seeded before every test block.
 
 ### API Routes
 
@@ -108,9 +111,9 @@ Returns a JSON object with the profile data for the specified user.
 ### Testing
 All API enpoints have been tested against the data that was seeded with the test database.
 
-The test database is re-seeded everytime before the test suite is ran
+The test database is re-seeded everytime before the test suite is ran.
 
-To run the test suite run the script
+To run the test suite run the script:
 ```
 npm test
 ```
