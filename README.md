@@ -1,5 +1,5 @@
 ## NCNews Backend API
-An API built with Node, Express and Mongo that will serve data to the front end application in the Northcoders News sprint.
+An API built with Node, Express and MongoDB that will serve data to the front end application in the Northcoders News sprint.
 
 ### Prerequisites
 
