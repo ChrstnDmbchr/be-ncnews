@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const path = require('path')
 
 const apiRoutes = require('./routes.json');
 
@@ -9,9 +10,9 @@ const topicsRoutes = require('./topicsRoutes');
 const usersRoutes = require('./usersRoutes');
 
 router.get('/', (req, res, next) => {
-  // TODO html page
-  // serves object containing all route info
-  res.status(200).send(apiRoutes);
+  res.render(path.join(__dirname, '../views', 'index.ejs'), {
+    data: apiRoutes
+  });
 })
 
 router.use('/topics', topicsRoutes);
