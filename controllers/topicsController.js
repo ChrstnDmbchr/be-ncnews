@@ -14,7 +14,24 @@ exports.getAllTopics = (req, res, next) => {
 }
 
 exports.getAllTopicArticles = (req, res, next) => {
-  models.Article.find({belongs_to: `${req.params.topic_id}`})
+  models.Article.aggregate([
+    { $match: {belongs_to: mongoose.Types.ObjectId(req.params.topic_id)}},
+    { $lookup: {
+      from: 'comments',
+      localField: '_id',
+      foreignField: 'belongs_to',
+      as: 'comments'
+    }},
+    { $project: {
+      votes: '$votes',
+      title: '$title',
+      created_by: '$created_by',
+      body: '$body',
+      belongs_to: '$belongs_to',
+      comment_count: {$size: '$comments'},
+      __v: '$__v'
+    }}
+  ])
   .then(articles => {
     res.status(200).send({
       articles: articles
