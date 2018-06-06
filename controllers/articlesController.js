@@ -1,7 +1,24 @@
 const models = require('../models/');
+const mongoose = require('mongoose')
 
 exports.getAllArticles = (req, res, next) => {
-  models.Article.find({})
+  models.Article.aggregate([
+    { $lookup: {
+      from: 'comments',
+      localField: '_id',
+      foreignField: 'belongs_to',
+      as: 'comments'
+    }},
+    { $project: {
+      votes: '$votes',
+      title: '$title',
+      created_by: '$created_by',
+      body: '$body',
+      belongs_to: '$belongs_to',
+      comment_count: {$size: '$comments'},
+      __v: '$__v'
+    }}
+  ])
   .then(articles => {
     res.status(200).send({
       articles: articles
