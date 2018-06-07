@@ -21,4 +21,8 @@ app.use(bodyParser);
 
 app.use('/api', apiRoutes);
 
+app.use((err, req, res, next) => {
+  res.status(err.status).send(err);
+});
+
 module.exports = app; 

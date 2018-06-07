@@ -4,12 +4,16 @@ const models = require('../models');
 exports.getAllTopics = (req, res, next) => {
   models.Topic.find({})
   .then(topics => {
+    if (topics.length === 0) {
+      return next({status: 404, error: 'No Topics found'});
+    }
+
     res.status(200).send({
       topics: topics
     })
   })
   .catch(err => {
-    res.status(500).send(err)
+    res.status(500).send(err);
   })
 }
 
@@ -33,12 +37,17 @@ exports.getAllTopicArticles = (req, res, next) => {
     }}
   ])
   .then(articles => {
+    if (articles.length === 0) {
+      return next({status: 404, error: 'Topic not found'});
+    }
+
     res.status(200).send({
       articles: articles
-    })
+    });
+
   })
   .catch(err => {
-    res.status(500).send(err)
+    res.status(500).send(err);
   })
 }
 

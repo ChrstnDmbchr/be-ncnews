@@ -20,6 +20,10 @@ exports.getAllArticles = (req, res, next) => {
     }}
   ])
   .then(articles => {
+    if (articles.length === 0) {
+      return next({status: 404, error: 'Articles not found'});
+    }
+
     res.status(200).send({
       articles: articles
     });
@@ -32,22 +36,30 @@ exports.getAllArticles = (req, res, next) => {
 exports.getArticle = (req, res, next) => {
   models.Article.findById(req.params.article_id)
   .then(article => {
+    if (article === null) {
+      return next({status: 404, error: 'Article not found'});
+    }
+
     res.status(200).send(article);
   })
   .catch(err => {
-    res.status(500).send(err);
+    next({status: 400, error: err});
   });
 };
 
 exports.getArticleComments = (req, res, next) => {
   models.Comment.find({belongs_to: req.params.article_id})
   .then(comments => {
+    if (comments.length === 0) {
+      return next({status: 404, error: 'Comments not found'});
+    }
+
     res.status(200).send({
       comments: comments
     });
   })
   .catch(err => {
-    res.status(500).send(err);
+    next({status: 400, error: err});
   });
 };
 
