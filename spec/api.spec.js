@@ -65,6 +65,17 @@ describe('API Endpoints', () => {
       expect(Object.keys(res.body).length).to.equal(1)
     });
   });
+  it('Topics - GET /api/topics/:topic_id/articles - 404', () => {
+    return request
+    .get('/api/topics/5b02d98661898f46f27048e5/articles')
+    .then(res => {
+      expect(res.status).to.equal(404);
+      expect(res.body).to.eql({
+        "status": 404,
+        "error": "Topic not found"
+      })
+    })
+  });
   it('Topics - POST /api/topics/:topic_id/articles', () => {
     return request
     .post(`/api/topics/${savedTopics[0]._id}/articles`)
@@ -97,6 +108,17 @@ describe('API Endpoints', () => {
       expect(res.body.title).to.equal('Living in the shadow of a great man');
     });
   });
+  it('Articles -GET /api/articles/:article_id - 404', () => {
+    return request
+    .get('/api/articles/5b02d98661898f46f27048e1')
+    .then(res => {
+      expect(res.status).to.equal(404);
+      expect(res.body).to.eql({
+        "status": 404,
+        "error": "Article not found"
+      })
+    })
+  })
   it('Articles - GET /api/articles/:article_id/comments', () => {
     return request
     .get(`/api/articles/${articleId}/comments`)
@@ -105,6 +127,14 @@ describe('API Endpoints', () => {
       expect(Array.isArray(res.body.comments)).to.be.true;
     });
   });
+  it('Articles - GET /api/articles/:article_id/comments - 404', () => {
+    return request
+    .get(`/api/articles/${articleId}/comments`)
+    .then(res => {
+      expect(res.body.comments.length).to.equal(2);
+      expect(Array.isArray(res.body.comments)).to.be.true;
+    });
+  })
   it('Articles - POST /api/articles/:article_id/comments', () => {
     return request
     .post(`/api/articles/${articleId}/comments`)
