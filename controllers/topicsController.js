@@ -4,7 +4,7 @@ const models = require('../models');
 exports.getAllTopics = (req, res, next) => {
   models.Topic.find({})
   .then(topics => {
-    if (topics.length === 0) {
+    if (!topics.length) {
       return next({status: 404, error: 'No Topics found'});
     }
 
@@ -60,6 +60,6 @@ exports.postArticleTopic = (req, res, next) => {
         article: result
       })
     })
-    .catch(err => next({status: 500, error: err}));
+    .catch(err => next({status: 400, error: err}));
   });
 };
