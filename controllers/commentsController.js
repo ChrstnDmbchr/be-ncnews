@@ -17,8 +17,8 @@ exports.commentVote = (req, res, next) => {
       vote_count: comment.votes
     });
   })
-  .catch(err => res.status(500).send(err));
-}
+  .catch(err => next({status: 500, error: err}));
+};
 
 exports.deleteComment = (req, res, next) => {
   models.Comment.findByIdAndRemove({_id: req.params.comments_id})
@@ -28,7 +28,5 @@ exports.deleteComment = (req, res, next) => {
       comment: comment
     })
   })
-  .catch(err => {
-    res.status(500).send(err);
-  });
+  .catch(err => next({status: 500, error: err}));
 };

@@ -8,8 +8,8 @@ The database connections strings are in the `dbconnection` directory and this is
 
 If you wish to change the name of the databases created this can be modified in `dbconnection/index.js` as follows:
 ```
-exports.devUrl = 'mongodb://localhost:27017/<NEW DB NAME>'
-exports.testUrl = 'mongodb://localhost:27017/<NEW DB NAME'
+exports.dev = 'mongodb://localhost:27017/<NEW DB NAME>'
+exports.test = 'mongodb://localhost:27017/<NEW DB NAME'
 ```
 
 By default the databases will be named `ncnews` and `ncnews-test` respectively.

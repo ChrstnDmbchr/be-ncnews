@@ -1,5 +1,4 @@
 const models = require('../models/');
-const mongoose = require('mongoose')
 
 exports.getAllArticles = (req, res, next) => {
   models.Article.aggregate([
@@ -15,52 +14,41 @@ exports.getAllArticles = (req, res, next) => {
       created_by: '$created_by',
       body: '$body',
       belongs_to: '$belongs_to',
-      comment_count: {$size: '$comments'},
-      __v: '$__v'
+      comment_count: {$size: '$comments'}
     }}
   ])
   .then(articles => {
-    if (articles.length === 0) {
+    if (!articles.length) {
       return next({status: 404, error: 'Articles not found'});
-    }
+    };
 
-    res.status(200).send({
-      articles: articles
-    });
+    res.status(200).send({ articles });
   })
-  .catch(err => {
-    res.status(500).send(err)
-  });
+  .catch(err => next({status: 500, error: err}));
 };
 
 exports.getArticle = (req, res, next) => {
   models.Article.findById(req.params.article_id)
   .then(article => {
-    if (article === null) {
+    if (!article) {
       return next({status: 404, error: 'Article not found'});
-    }
+    };
 
     res.status(200).send(article);
   })
-  .catch(err => {
-    next({status: 400, error: err});
-  });
+  .catch(err => next({status: 400, error: err}));
 };
 
 exports.getArticleComments = (req, res, next) => {
   models.Comment.find({belongs_to: req.params.article_id})
   .then(comments => {
-    if (comments.length === 0) {
+    if (!comments.length) {
       return next({status: 404, error: 'Comments not found'});
-    }
+    };
 
-    res.status(200).send({
-      comments: comments
-    });
+    res.status(200).send({ comments });
   })
-  .catch(err => {
-    next({status: 400, error: err});
-  });
+  .catch(err => next({status: 400, error: err}));
 };
 
 exports.addArticleComments = (req, res, next) => {
@@ -80,29 +68,32 @@ exports.addArticleComments = (req, res, next) => {
       comment: comment
     });
   })
-  .catch(err => {
-    res.status(500).send(err);
-  });
+  .catch(err => next({status: 500, error: err}));
 };
 
 exports.articleVote = (req, res, next) => {
-  if (!Object.keys(req.query).includes('vote')) {
-    return res.status(400).send({
-      error: "invalid query, please user the 'vote' query followed by up/down"
-    });
+  if (!req.query.hasOwnProperty('vote')) {
+    return next({status: 400, error: "invalid query, please user the 'vote' query followed by up/down"});
   };
 
-  let vote
-  if (req.query.vote === 'up') vote = 1
-  else if (req.query.vote === 'down') vote = -1
+  if(req.query.vote !== 'up' && req.query.vote !== 'down') {
+    return next({status: 400, error: "invalid query, please user the 'vote' query followed by up/down"});
+  }
+
+  let vote;
+  if (req.query.vote === 'up') vote = 1;
+  else if (req.query.vote === 'down') vote = -1;
 
   models.Article.findByIdAndUpdate({_id: req.params.article_id}, {$inc: {votes: vote}}, { new: true })
   .then(article => {
-     res.status(201).send({
+    if (!article) {
+      return next({status: 404, error: 'Article not found'});
+    };
+
+    res.status(201).send({
       message: `article vote modified by ${vote}!`,
       vote_count: article.votes
     });
   })
-  .catch(err => res.status(500).send(err));
-  
+  .catch(err => next({status: 500, error: err}));
 };

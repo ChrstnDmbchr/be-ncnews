@@ -8,14 +8,10 @@ exports.getAllTopics = (req, res, next) => {
       return next({status: 404, error: 'No Topics found'});
     }
 
-    res.status(200).send({
-      topics: topics
-    })
+    res.status(200).send({ topics });
   })
-  .catch(err => {
-    res.status(500).send(err);
-  })
-}
+  .catch(err => next({status: 500, error: err}));
+};
 
 exports.getAllTopicArticles = (req, res, next) => {
   models.Article.aggregate([
@@ -37,19 +33,15 @@ exports.getAllTopicArticles = (req, res, next) => {
     }}
   ])
   .then(articles => {
-    if (articles.length === 0) {
+    if (!articles.length) {
       return next({status: 404, error: 'Topic not found'});
     }
 
-    res.status(200).send({
-      articles: articles
-    });
+    res.status(200).send({ articles });
 
   })
-  .catch(err => {
-    res.status(500).send(err);
-  })
-}
+  .catch(err => next({status: 500, error: err}));
+};
 
 exports.postArticleTopic = (req, res, next) => {
   // added to hack created_by value TODO: replace when user auth is added 
@@ -68,8 +60,6 @@ exports.postArticleTopic = (req, res, next) => {
         article: result
       })
     })
-    .catch(err => {
-      res.status(500).send(err)
-    })
-  })
-}
+    .catch(err => next({status: 500, error: err}));
+  });
+};

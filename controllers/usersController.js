@@ -5,7 +5,5 @@ exports.getUser = (req, res, next) => {
   .then(user => {
     res.status(200).send(user);
   })
-  .catch(err => {
-    res.status(500).send(err)
-  });
+  .catch(err => next({status: 500, error: err}));
 };
