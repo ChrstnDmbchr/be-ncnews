@@ -1,7 +1,9 @@
-if (process.env.MONGODB_URI) db_url = process.env.MONGODB_URI
-if (!process.env.NODE_ENV) process.env.NODE_ENV = 'dev'
-db_url = require('./dbconnection')[process.env.NODE_ENV]
+let connectionUrl
+const {dev, test} = require('./dbconnection');
 
+if (process.env.NODE_ENV !== 'test' && !process.env.MONGODB_URI) connectionUrl = dev;
+else if (process.env.MONGODB_URI) connectionUrl = process.env.MONGODB_URI
+else connectionUrl = test;
 
 const express = require('express');
 const app = express();
