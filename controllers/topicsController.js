@@ -28,8 +28,7 @@ exports.getAllTopicArticles = (req, res, next) => {
       created_by: '$created_by',
       body: '$body',
       belongs_to: '$belongs_to',
-      comment_count: {$size: '$comments'},
-      __v: '$__v'
+      comment_count: {$size: '$comments'}
     }}
   ])
   .then(articles => {
