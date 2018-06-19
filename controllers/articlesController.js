@@ -43,7 +43,7 @@ exports.getArticleComments = (req, res, next) => {
   models.Comment.find({belongs_to: req.params.article_id})
   .then(comments => {
     if (!comments.length) {
-      return next({status: 404, error: 'Comments not found'});
+      return next({status: 404, error: 'Article not found'});
     };
 
     res.status(200).send({ comments });
@@ -68,7 +68,7 @@ exports.addArticleComments = (req, res, next) => {
       comment: comment
     });
   })
-  .catch(err => next({status: 500, error: err}));
+  .catch(err => next({status: 400, error: err}));
 };
 
 exports.articleVote = (req, res, next) => {
