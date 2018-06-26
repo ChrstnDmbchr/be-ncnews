@@ -39,9 +39,15 @@ exports.getAllTopicArticles = (req, res, next) => {
     { $project: {
       votes: '$votes',
       title: '$title',
-      created_by: '$created_by.username',
+      created_by: {
+        username: '$created_by.username',
+        id: '$created_by._id'
+      },
       body: '$body',
-      belongs_to: '$belongs_to.title',
+      belongs_to: {
+        title: '$belongs_to.title',
+        id: '$belongs_to._id'
+      },
       comment_count: {$size: '$comments'}
     }}
   ])
