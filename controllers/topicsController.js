@@ -22,12 +22,26 @@ exports.getAllTopicArticles = (req, res, next) => {
       foreignField: 'belongs_to',
       as: 'comments'
     }},
+    { $lookup: {
+      from: 'users',
+      localField: 'created_by',
+      foreignField: '_id',
+      as: 'created_by'
+    }},
+    { $lookup: {
+      from: 'topics',
+      localField: 'belongs_to',
+      foreignField: '_id',
+      as: 'belongs_to'
+    }},
+    { $unwind: '$created_by'},
+    { $unwind: '$belongs_to'},
     { $project: {
       votes: '$votes',
       title: '$title',
-      created_by: '$created_by',
+      created_by: '$created_by.username',
       body: '$body',
-      belongs_to: '$belongs_to',
+      belongs_to: '$belongs_to.title',
       comment_count: {$size: '$comments'}
     }}
   ])
