@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const models = require('../models/');
 
 exports.getAllArticles = (req, res, next) => {
@@ -61,7 +62,24 @@ exports.getArticle = (req, res, next) => {
 };
 
 exports.getArticleComments = (req, res, next) => {
-  models.Comment.find({belongs_to: req.params.article_id})
+  models.Comment.aggregate([
+    { $match: {belongs_to: mongoose.Types.ObjectId(req.params.article_id)}},
+    { $lookup: {
+      from: 'users',
+      localField: 'created_by',
+      foreignField: '_id',
+      as: 'created_by'
+    }},
+    { $unwind: '$created_by'},
+    { $project: {
+      created_at: '$created_at',
+      votes: '$votes',
+      _id: '$_id',
+      body: '$body',
+      belongs_to: '$belongs_to',
+      created_by: '$created_by.username'
+    }}
+  ])
   .then(comments => {
     if (!comments.length) {
       return next({status: 404, error: 'Article not found'});
