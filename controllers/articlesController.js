@@ -50,8 +50,32 @@ exports.getAllArticles = (req, res, next) => {
 };
 
 exports.getArticle = (req, res, next) => {
-  models.Article.findById(req.params.article_id)
-  .then(article => {
+  models.Article.aggregate([
+    { $match: {_id: mongoose.Types.ObjectId(req.params.article_id)}},
+    { $lookup: {
+      from: 'users',
+      localField: 'created_by',
+      foreignField: '_id',
+      as: 'created_by'
+    }},
+    { $lookup: {
+      from: 'topics',
+      localField: 'belongs_to',
+      foreignField: '_id',
+      as: 'belongs_to'
+    }},
+    { $unwind: '$belongs_to'},
+    { $unwind: '$created_by'},
+    { $project: {
+      votes: '$votes',
+      _id: '$_id',
+      body: '$body',
+      title: '$title',
+      belongs_to: '$belongs_to.title',
+      created_by: '$created_by.username'
+    }}
+  ])
+  .then(([ article ]) => {
     if (!article) {
       return next({status: 404, error: 'Article not found'});
     };

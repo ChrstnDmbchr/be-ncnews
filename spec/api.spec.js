@@ -131,7 +131,7 @@ describe('API Endpoints', () => {
     .get(`/api/articles/${articleId}`)
     .then(res => {
       expect(typeof res.body).to.equal('object');
-      expect(Object.keys(res.body).length).to.equal(7);
+      expect(Object.keys(res.body).length).to.equal(6);
       expect(res.body.title).to.equal('Living in the shadow of a great man');
     });
   });
