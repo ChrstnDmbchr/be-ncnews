@@ -2,11 +2,12 @@ const model = require('../models');
 
 exports.getUser = (req, res, next) => {
   model.User.findOne({username: req.params.username})
-  .then(user => {
+  .then(async user => {
     if (!user) {
       return next({status: 404, error: 'user not found'});
     };
-    res.status(200).send(user);
+    const userArticles = await model.Article.find({username: req.params.id})
+    res.status(200).send( {...user._doc, ...{articles: userArticles}} );
   })
   .catch(err => next({status: 500, error: err}));
 };

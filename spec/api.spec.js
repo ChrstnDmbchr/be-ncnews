@@ -274,6 +274,7 @@ describe('API Endpoints', () => {
     .then(res => {
       expect(res.body.name).to.equal('mitch');
       expect(res.body.username).to.equal(savedUsername);
+      expect(res.body.articles).to.be.an('array')
     });
   });
   it('Users - GET /api/users/:username - invalid username 404', () => {
