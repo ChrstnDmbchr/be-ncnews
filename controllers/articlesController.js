@@ -125,10 +125,11 @@ exports.addArticleComments = (req, res, next) => {
       created_by: user._id
     });
   })
-  .then(comment => {
+  .then(async comment => {
+    const user = await models.User.findById(comment.created_by)
     res.status(201).send({
       message: 'comment created',
-      comment: comment
+      comment: { ...comment._doc, ...{ created_by: user.username }}
     });
   })
   .catch(err => next({status: 400, error: err}));
