@@ -6,7 +6,7 @@ exports.getUser = (req, res, next) => {
     if (!user) {
       return next({status: 404, error: 'user not found'});
     };
-    const userArticles = await model.Article.find({username: req.params.id})
+    const userArticles = await model.Article.find({created_by: user._id})
     res.status(200).send( {...user._doc, ...{articles: userArticles}} );
   })
   .catch(err => next({status: 500, error: err}));
