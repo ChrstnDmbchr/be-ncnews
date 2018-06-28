@@ -119,7 +119,7 @@ exports.addArticleComments = (req, res, next) => {
   models.User.findOne({name: 'mitch'})
   .then(user => {
     return models.Comment.create({
-      body: req.body.body,
+      body: req.body.comment,
       belongs_to: req.params.article_id,
       // user id from db call here
       created_by: user._id

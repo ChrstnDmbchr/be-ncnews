@@ -166,7 +166,7 @@ describe('API Endpoints', () => {
     return request
     .post(`/api/articles/${articleId}/comments`)
     .send({
-      body: "this is a test comment",
+      comment: "this is a test comment",
     })
     .then(res => {
       expect(res.body.message).to.equal('comment created');
